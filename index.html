@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abia State Impact Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <h1>Abia Impact Dashboard</h1>
+      <p>Projects • SDGs • Citizens</p>
+    </div>
+
+    <nav>
+      <button class="nav-btn active" data-view="overview">Overview</button>
+      <button class="nav-btn" data-view="projects">Projects</button>
+      <button class="nav-btn" data-view="sdg">SDG Alignment</button>
+      <button class="nav-btn" data-view="financial">Financials</button>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div>
+        <h2 id="page-title">Overview</h2>
+        <p>Interactive public sector impact and project monitoring dashboard</p>
+      </div>
+
+      <div class="filters">
+        <select id="yearFilter">
+          <option value="all">All Years</option>
+          <option value="2025">2025</option>
+          <option value="2026">2026</option>
+        </select>
+
+        <select id="statusFilter">
+          <option value="all">All Status</option>
+          <option value="Completed">Completed</option>
+          <option value="In progress">In progress</option>
+          <option value="Not started">Not started</option>
+        </select>
+
+        <input type="text" id="searchInput" placeholder="Search projects..." />
+      </div>
+    </header>
+
+    <section class="kpi-grid">
+      <div class="kpi-card">
+        <h3>Total Projects</h3>
+        <strong id="totalProjects">0</strong>
+      </div>
+
+      <div class="kpi-card">
+        <h3>Total Budget</h3>
+        <strong id="totalBudget">₦0</strong>
+      </div>
+
+      <div class="kpi-card">
+        <h3>Total Impacted</h3>
+        <strong id="totalImpact">0</strong>
+      </div>
+
+      <div class="kpi-card">
+        <h3>Jobs Created</h3>
+        <strong id="jobsCreated">0</strong>
+      </div>
+    </section>
+
+    <section class="chart-grid">
+      <div class="panel">
+        <h3>Projects by Cluster</h3>
+        <div id="clusterChart"></div>
+      </div>
+
+      <div class="panel">
+        <h3>Projects by Status</h3>
+        <div id="statusChart"></div>
+      </div>
+    </section>
+
+    <section class="panel full-width">
+      <div class="panel-header">
+        <h3>Projects Portfolio</h3>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Project</th>
+              <th>Cluster</th>
+              <th>Status</th>
+              <th>Budget</th>
+              <th>Progress</th>
+              <th>SDG</th>
+            </tr>
+          </thead>
+          <tbody id="projectsTable"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal hidden" id="projectModal">
+    <div class="modal-content">
+      <button class="close-btn" id="closeModal">×</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
