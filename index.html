@@ -1,148 +1,115 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Abia Impact Dashboard 2025–2026</title>
-<meta name="description" content="Citizen-centric impact dashboard for the Abia State Government — projects, budget, impact and SDG alignment." />
-<link rel="stylesheet" href="styles.css" />
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@2.3.1/dist/chartjs-chart-treemap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abia State Impact Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-<div class="app">
   <aside class="sidebar">
     <div class="brand">
-      <div class="brand-mark">A</div>
-      <div>
-        <div class="brand-title">Abia State Govt</div>
-        <div class="brand-sub">Impact Dashboard</div>
-      </div>
+      <h1>Abia Impact Dashboard</h1>
+      <p>Projects • SDGs • Citizens</p>
     </div>
-    <nav class="nav">
-      <button class="nav-link active" data-page="overview">📊 Overview</button>
-      <button class="nav-link" data-page="portfolio">📁 Project Portfolio</button>
-      <button class="nav-link" data-page="impact">👥 Citizen Impact</button>
-      <button class="nav-link" data-page="sdg">🎯 SDG Alignment</button>
-      <button class="nav-link" data-page="financial">💰 Financial Performance</button>
+
+    <nav>
+      <button class="nav-btn active" data-view="overview">Overview</button>
+      <button class="nav-btn" data-view="projects">Projects</button>
+      <button class="nav-btn" data-view="sdg">SDG Alignment</button>
+      <button class="nav-btn" data-view="financial">Financials</button>
     </nav>
-    <div class="sidebar-foot">© 2025–2026 Abia State</div>
   </aside>
 
-  <div class="main">
+  <main class="main-content">
     <header class="topbar">
-      <button id="menu-toggle" class="icon-btn" aria-label="Toggle menu">☰</button>
-      <div class="title">
-        <span class="bar"></span>
-        <h1>Abia State Government · Impact Dashboard</h1>
+      <div>
+        <h2 id="page-title">Overview</h2>
+        <p>Interactive public sector impact and project monitoring dashboard</p>
       </div>
-      <div class="actions">
-        <button class="btn" id="theme-toggle" title="Toggle theme">🌓</button>
-        <button class="btn" id="export-pdf">📄 PDF</button>
-        <button class="btn" id="export-xlsx">📊 Excel</button>
-        <button class="btn" id="export-img">🖼️ Image</button>
-        <button class="btn primary" id="export-csv">⬇ CSV</button>
+
+      <div class="filters">
+        <select id="yearFilter">
+          <option value="all">All Years</option>
+          <option value="2025">2025</option>
+          <option value="2026">2026</option>
+        </select>
+
+        <select id="statusFilter">
+          <option value="all">All Status</option>
+          <option value="Completed">Completed</option>
+          <option value="In progress">In progress</option>
+          <option value="Not started">Not started</option>
+        </select>
+
+        <input type="text" id="searchInput" placeholder="Search projects..." />
       </div>
     </header>
 
-    <section class="filters">
-      <input type="search" id="f-search" placeholder="Search projects or MDA…" />
-      <select id="f-cluster"><option value="all">All Clusters</option></select>
-      <select id="f-lga"><option value="all">All LGAs</option></select>
-      <select id="f-year"><option value="all">All Years</option><option>2025</option><option>2026</option></select>
-      <select id="f-status"><option value="all">All Status</option><option>Completed</option><option>In progress</option><option>Not started</option></select>
-      <select id="f-priority"><option value="all">All Priority</option><option>Priority</option><option>Non-priority</option></select>
-      <select id="f-sdg"><option value="all">All SDGs</option></select>
-      <button class="btn ghost" id="f-reset">Reset</button>
+    <section class="kpi-grid">
+      <div class="kpi-card">
+        <h3>Total Projects</h3>
+        <strong id="totalProjects">0</strong>
+      </div>
+
+      <div class="kpi-card">
+        <h3>Total Budget</h3>
+        <strong id="totalBudget">₦0</strong>
+      </div>
+
+      <div class="kpi-card">
+        <h3>Total Impacted</h3>
+        <strong id="totalImpact">0</strong>
+      </div>
+
+      <div class="kpi-card">
+        <h3>Jobs Created</h3>
+        <strong id="jobsCreated">0</strong>
+      </div>
     </section>
 
-    <main class="content">
-      <!-- OVERVIEW -->
-      <section class="page active" id="page-overview">
-        <div class="kpi-grid">
-          <div class="kpi"><div class="kpi-label">Total Projects</div><div class="kpi-value" id="kpi-projects">–</div><div class="kpi-sub" id="kpi-projects-sub"></div></div>
-          <div class="kpi"><div class="kpi-label">Total Budget</div><div class="kpi-value" id="kpi-budget">–</div><div class="kpi-sub">Across portfolio</div></div>
-          <div class="kpi"><div class="kpi-label">Total Spend</div><div class="kpi-value" id="kpi-spend">–</div><div class="kpi-sub" id="kpi-util"></div></div>
-          <div class="kpi"><div class="kpi-label">Citizens Impacted</div><div class="kpi-value" id="kpi-people">–</div><div class="kpi-sub" id="kpi-jobs"></div></div>
-        </div>
-        <div class="grid-2">
-          <div class="card"><h3>Budget by Cluster</h3><div class="chart-wrap"><canvas id="ch-cluster"></canvas></div></div>
-          <div class="card"><h3>Project Status</h3><div class="chart-wrap"><canvas id="ch-status"></canvas></div></div>
-        </div>
-        <div class="card"><h3>SDG Alignment — Budget Distribution</h3><div class="chart-wrap tall"><canvas id="ch-sdg-tree"></canvas></div></div>
-      </section>
+    <section class="chart-grid">
+      <div class="panel">
+        <h3>Projects by Cluster</h3>
+        <div id="clusterChart"></div>
+      </div>
 
-      <!-- PORTFOLIO -->
-      <section class="page" id="page-portfolio">
-        <div class="card">
-          <h3>Project Portfolio <span id="port-count" class="badge"></span></h3>
-          <div class="table-scroll">
-            <table class="data-table" id="port-table">
-              <thead><tr>
-                <th data-sort="name">Project</th>
-                <th data-sort="cluster">Cluster</th>
-                <th data-sort="lga">LGA</th>
-                <th data-sort="budget">Budget</th>
-                <th data-sort="utilisation">Util %</th>
-                <th data-sort="progress">Progress</th>
-                <th data-sort="status">Status</th>
-                <th data-sort="sdg">SDG</th>
-              </tr></thead>
-              <tbody></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
+      <div class="panel">
+        <h3>Projects by Status</h3>
+        <div id="statusChart"></div>
+      </div>
+    </section>
 
-      <!-- IMPACT -->
-      <section class="page" id="page-impact">
-        <div class="kpi-grid">
-          <div class="kpi"><div class="kpi-label">Direct Beneficiaries</div><div class="kpi-value" id="im-direct">–</div></div>
-          <div class="kpi"><div class="kpi-label">Indirect Beneficiaries</div><div class="kpi-value" id="im-indirect">–</div></div>
-          <div class="kpi"><div class="kpi-label">Jobs Created</div><div class="kpi-value" id="im-jobs">–</div></div>
-          <div class="kpi"><div class="kpi-label">Avg Women %</div><div class="kpi-value" id="im-women">–</div></div>
-        </div>
-        <div class="grid-2">
-          <div class="card"><h3>Beneficiaries by LGA</h3><div class="chart-wrap tall"><canvas id="ch-lga"></canvas></div></div>
-          <div class="card"><h3>Women vs Youth Inclusion (by Cluster)</h3><div class="chart-wrap tall"><canvas id="ch-demo"></canvas></div></div>
-        </div>
-      </section>
+    <section class="panel full-width">
+      <div class="panel-header">
+        <h3>Projects Portfolio</h3>
+      </div>
 
-      <!-- SDG -->
-      <section class="page" id="page-sdg">
-        <div class="card"><h3>17 Sustainable Development Goals — Coverage</h3>
-          <div class="sdg-grid" id="sdg-grid"></div>
-        </div>
-        <div class="card"><h3>SDG Contribution Profile</h3>
-          <div class="chart-wrap tall"><canvas id="ch-radar"></canvas></div>
-        </div>
-      </section>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Project</th>
+              <th>Cluster</th>
+              <th>Status</th>
+              <th>Budget</th>
+              <th>Progress</th>
+              <th>SDG</th>
+            </tr>
+          </thead>
+          <tbody id="projectsTable"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
 
-      <!-- FINANCIAL -->
-      <section class="page" id="page-financial">
-        <div class="grid-2">
-          <div class="card"><h3>Budget vs Spend (by Cluster)</h3><div class="chart-wrap tall"><canvas id="ch-bvs"></canvas></div></div>
-          <div class="card"><h3>Utilisation by Year</h3><div class="chart-wrap tall"><canvas id="ch-year"></canvas></div></div>
-        </div>
-        <div class="card"><h3>Value for Money — Impact per ₦ Million</h3><div class="chart-wrap tall"><canvas id="ch-vfm"></canvas></div></div>
-      </section>
-    </main>
-
-    <footer class="footer">© 2025–2026 Abia State Government · Built for transparent, impact-led governance.</footer>
+  <div class="modal hidden" id="projectModal">
+    <div class="modal-content">
+      <button class="close-btn" id="closeModal">×</button>
+      <div id="modalBody"></div>
+    </div>
   </div>
-</div>
 
-<!-- Project modal -->
-<div class="modal-backdrop" id="modal-bd" hidden>
-  <div class="modal">
-    <button class="modal-close" id="modal-close">✕</button>
-    <div id="modal-body"></div>
-  </div>
-</div>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
