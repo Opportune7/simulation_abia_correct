@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="">
+<html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,293 +8,148 @@
 <link rel="stylesheet" href="styles.css" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@2.3.1/dist/chartjs-chart-treemap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 <div class="app">
-
-  <aside class="sidebar" id="sidebar">
-    <button class="sidebar-toggle" id="sidebar-toggle" title="Collapse sidebar">&#8249;</button>
-    <div class="sidebar-header">
-      <div class="brand-icon">A</div>
-      <div class="brand-text">
-        <div class="brand-title">Abia Impact</div>
-        <div class="brand-sub">Dashboard 2025-26</div>
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">A</div>
+      <div>
+        <div class="brand-title">Abia State Govt</div>
+        <div class="brand-sub">Impact Dashboard</div>
       </div>
     </div>
-    <div class="nav-group">
-      <div class="nav-label">Government Insights</div>
-      <nav class="nav">
-        <button class="nav-link active" data-page="overview">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-          <span class="nav-link-text">Overview</span>
-        </button>
-        <button class="nav-link" data-page="portfolio">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-          <span class="nav-link-text">Projects Portfolio</span>
-        </button>
-        <button class="nav-link" data-page="impact">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          <span class="nav-link-text">Impact &amp; Citizens</span>
-        </button>
-        <button class="nav-link" data-page="sdg">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/></svg>
-          <span class="nav-link-text">SDG Alignment</span>
-        </button>
-        <button class="nav-link" data-page="financial">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-          <span class="nav-link-text">Financial Performance</span>
-        </button>
-      </nav>
-    </div>
-    <div class="sidebar-foot">&#169; 2025&#8211;2026 Abia State Government</div>
+    <nav class="nav">
+      <button class="nav-link active" data-page="overview">📊 Overview</button>
+      <button class="nav-link" data-page="portfolio">📁 Project Portfolio</button>
+      <button class="nav-link" data-page="impact">👥 Citizen Impact</button>
+      <button class="nav-link" data-page="sdg">🎯 SDG Alignment</button>
+      <button class="nav-link" data-page="financial">💰 Financial Performance</button>
+    </nav>
+    <div class="sidebar-foot">© 2025–2026 Abia State</div>
   </aside>
 
   <div class="main">
     <header class="topbar">
-      <button class="menu-toggle" id="menu-toggle" aria-label="Open menu">&#9776;</button>
-      <div class="topbar-brand">
-        <span class="accent-bar"></span>
-        <h1>Abia State Government &middot; Impact Dashboard</h1>
+      <button id="menu-toggle" class="icon-btn" aria-label="Toggle menu">☰</button>
+      <div class="title">
+        <span class="bar"></span>
+        <h1>Abia State Government · Impact Dashboard</h1>
       </div>
-      <div class="topbar-actions">
-        <button class="btn" id="theme-toggle" title="Toggle dark mode">&#127763;</button>
-        <button class="btn btn-ghost btn-sm" id="btn-print">&#128424; Print</button>
-        <button class="btn btn-primary btn-sm" id="btn-csv">&#8595; Export CSV</button>
+      <div class="actions">
+        <button class="btn" id="theme-toggle" title="Toggle theme">🌓</button>
+        <button class="btn" id="export-pdf">📄 PDF</button>
+        <button class="btn" id="export-xlsx">📊 Excel</button>
+        <button class="btn" id="export-img">🖼️ Image</button>
+        <button class="btn primary" id="export-csv">⬇ CSV</button>
       </div>
     </header>
 
-    <div class="filter-bar" id="filter-bar">
-      <div class="filter-search">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="search" id="f-search" placeholder="Search projects or MDA&#8230;" />
-      </div>
-      <select id="f-year"><option value="all">All Years</option><option>2025</option><option>2026</option></select>
+    <section class="filters">
+      <input type="search" id="f-search" placeholder="Search projects or MDA…" />
       <select id="f-cluster"><option value="all">All Clusters</option></select>
       <select id="f-lga"><option value="all">All LGAs</option></select>
-      <select id="f-mda"><option value="all">All MDAs</option></select>
+      <select id="f-year"><option value="all">All Years</option><option>2025</option><option>2026</option></select>
       <select id="f-status"><option value="all">All Status</option><option>Completed</option><option>In progress</option><option>Not started</option></select>
       <select id="f-priority"><option value="all">All Priority</option><option>Priority</option><option>Non-priority</option></select>
       <select id="f-sdg"><option value="all">All SDGs</option></select>
-      <button class="btn btn-ghost btn-sm" id="f-reset">&#8635; Reset</button>
-    </div>
+      <button class="btn ghost" id="f-reset">Reset</button>
+    </section>
 
     <main class="content">
-
       <!-- OVERVIEW -->
       <section class="page active" id="page-overview">
-        <div class="page-header">
-          <h2>Executive Summary</h2>
-          <p id="ov-subtitle">Real-time view of Abia State&#8217;s project portfolio</p>
-        </div>
         <div class="kpi-grid">
-          <div class="kpi-card"><div><div class="kpi-label">Total Budget</div><div class="kpi-value" id="kpi-budget">&#8211;</div></div><div class="kpi-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div></div>
-          <div class="kpi-card"><div><div class="kpi-label">Total Spend</div><div class="kpi-value" id="kpi-spend">&#8211;</div></div><div class="kpi-icon navy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div></div>
-          <div class="kpi-card"><div><div class="kpi-label">Avg Utilisation</div><div class="kpi-value" id="kpi-util">&#8211;</div></div><div class="kpi-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div></div>
-          <div class="kpi-card"><div><div class="kpi-label">Total Projects</div><div class="kpi-value" id="kpi-projects">&#8211;</div></div><div class="kpi-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div></div>
-          <div class="kpi-card"><div><div class="kpi-label">Completed</div><div class="kpi-value" id="kpi-completed">&#8211;</div><div class="kpi-sub" id="kpi-completed-rate"></div></div><div class="kpi-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div></div>
-          <div class="kpi-card"><div><div class="kpi-label">People Impacted</div><div class="kpi-value" id="kpi-people">&#8211;</div></div><div class="kpi-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div></div>
-          <div class="kpi-card"><div><div class="kpi-label">Jobs Created</div><div class="kpi-value" id="kpi-jobs">&#8211;</div></div><div class="kpi-icon navy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div></div>
+          <div class="kpi"><div class="kpi-label">Total Budget</div><div class="kpi-value" id="kpi-budget">–</div></div>
+          <div class="kpi"><div class="kpi-label">Total Spend</div><div class="kpi-value" id="kpi-spend">–</div></div>
+          <div class="kpi"><div class="kpi-label">Avg Utilisation</div><div class="kpi-value" id="kpi-util">–</div></div>
+          <div class="kpi"><div class="kpi-label">Total Projects</div><div class="kpi-value" id="kpi-projects">–</div></div>
+          <div class="kpi"><div class="kpi-label">Completed</div><div class="kpi-value" id="kpi-completed">–</div><div class="kpi-sub" id="kpi-completed-rate"></div></div>
+          <div class="kpi"><div class="kpi-label">People Impacted</div><div class="kpi-value" id="kpi-people">–</div></div>
+          <div class="kpi"><div class="kpi-label">Jobs Created</div><div class="kpi-value" id="kpi-jobs">–</div></div>
         </div>
-        <div class="grid-2 section-gap" style="grid-template-columns:2fr 1fr">
-          <div class="card">
-            <div class="card-title">Projects by Cluster</div>
-            <div class="card-sub">Budget allocation per delivery cluster</div>
-            <div class="chart-wrap"><canvas id="ch-cluster"></canvas></div>
-          </div>
-          <div class="card">
-            <div class="card-title">Project Mix</div>
-            <div class="card-sub">Share per cluster</div>
-            <div class="chart-wrap"><canvas id="ch-mix"></canvas></div>
-          </div>
+        <div class="grid-2">
+          <div class="card"><h3>Projects by Cluster</h3><p style="font-size:11px;color:var(--muted);margin:-8px 0 10px">Budget allocation and project count per delivery cluster</p><div class="chart-wrap"><canvas id="ch-cluster"></canvas></div></div>
+          <div class="card"><h3>Project Mix</h3><p style="font-size:11px;color:var(--muted);margin:-8px 0 10px">Share of projects per cluster</p><div class="chart-wrap"><canvas id="ch-mix"></canvas></div></div>
         </div>
-        <div class="grid-2 section-gap" style="grid-template-columns:1fr 2fr">
+        <div class="grid-2">
           <div class="card">
-            <div class="card-title">Progress by Priority</div>
-            <div class="card-sub">Average % completion</div>
-            <div class="priority-list" id="ov-priority"></div>
+            <h3>Progress by Priority</h3>
+            <p style="font-size:11px;color:var(--muted);margin:-8px 0 14px">Average % completion</p>
+            <div id="ov-priority-bars"></div>
           </div>
-          <div class="card">
-            <div class="card-title">SDG Alignment &#8212; Budget Distribution</div>
-            <div class="card-sub">Budget allocated by Sustainable Development Goal</div>
-            <div class="chart-wrap tall"><canvas id="ch-sdg-tree"></canvas></div>
-          </div>
+          <div class="card"><h3>SDG Alignment</h3><p style="font-size:11px;color:var(--muted);margin:-8px 0 10px">Budget allocated by Sustainable Development Goal</p><div class="chart-wrap" style="height:220px"><canvas id="ch-sdg-inline"></canvas></div></div>
         </div>
-        <div class="card section-gap">
-          <div class="card-title">LGA Impact Heatmap</div>
-          <div class="card-sub">People impacted across Abia&#8217;s 17 Local Government Areas</div>
-          <div class="lga-grid" id="ov-lga-grid"></div>
-        </div>
+        <div class="card"><h3>SDG Alignment — Full Budget Distribution</h3><div class="chart-wrap tall"><canvas id="ch-sdg-tree"></canvas></div></div>
       </section>
 
       <!-- PORTFOLIO -->
       <section class="page" id="page-portfolio">
-        <div class="page-header">
-          <h2>Projects Portfolio</h2>
-          <p id="port-subtitle">Drill into any project for full details</p>
-        </div>
-        <div class="tabs-list">
-          <button class="tab-btn active" data-tab="table">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-            Table
-          </button>
-          <button class="tab-btn" data-tab="cards">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-            Cards
-          </button>
-        </div>
-        <div class="tab-content active" id="tab-table">
-          <div class="card" style="padding:0;overflow:hidden">
-            <div class="table-scroll">
-              <table class="data-table" id="port-table">
-                <thead><tr>
-                  <th data-sort="name">Project</th>
-                  <th>Cluster</th>
-                  <th data-sort="lga">LGA</th>
-                  <th data-sort="budget" class="active">Budget &#8595;</th>
-                  <th data-sort="spend">Spend</th>
-                  <th data-sort="progress">Progress</th>
-                  <th>Status</th>
-                  <th>SDG</th>
-                </tr></thead>
-                <tbody id="port-tbody"></tbody>
-              </table>
-            </div>
-            <div class="pagination">
-              <span id="port-page-info"></span>
-              <div class="page-btns">
-                <button class="btn btn-sm" id="port-prev">&#8249;</button>
-                <span id="port-page-label" style="font-size:11px;color:var(--muted-fg)"></span>
-                <button class="btn btn-sm" id="port-next">&#8250;</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="tab-content" id="tab-cards">
-          <div class="cards-grid" id="port-cards"></div>
-          <div class="pagination" style="border:0;margin-top:10px;justify-content:center">
-            <div class="page-btns">
-              <button class="btn btn-sm" id="portc-prev">&#8249; Prev</button>
-              <span id="portc-page-label" style="font-size:11px;color:var(--muted-fg)"></span>
-              <button class="btn btn-sm" id="portc-next">Next &#8250;</button>
-            </div>
+        <div class="card">
+          <h3>Project Portfolio <span id="port-count" class="badge"></span></h3>
+          <div class="table-scroll">
+            <table class="data-table" id="port-table">
+              <thead><tr>
+                <th data-sort="name">Project</th>
+                <th data-sort="cluster">Cluster</th>
+                <th data-sort="lga">LGA</th>
+                <th data-sort="budget">Budget</th>
+                <th data-sort="utilisation">Util %</th>
+                <th data-sort="progress">Progress</th>
+                <th data-sort="status">Status</th>
+                <th data-sort="sdg">SDG</th>
+              </tr></thead>
+              <tbody></tbody>
+            </table>
           </div>
         </div>
       </section>
 
       <!-- IMPACT -->
       <section class="page" id="page-impact">
-        <div class="page-header">
-          <h2>Impact &amp; Citizens</h2>
-          <p>Real outcomes for Abians &#8212; beneficiaries, jobs, equity</p>
+        <div class="kpi-grid">
+          <div class="kpi"><div class="kpi-label">Direct Beneficiaries</div><div class="kpi-value" id="im-direct">–</div></div>
+          <div class="kpi"><div class="kpi-label">Indirect Beneficiaries</div><div class="kpi-value" id="im-indirect">–</div></div>
+          <div class="kpi"><div class="kpi-label">Jobs Created</div><div class="kpi-value" id="im-jobs">–</div></div>
+          <div class="kpi"><div class="kpi-label">Avg Women %</div><div class="kpi-value" id="im-women">–</div></div>
         </div>
-        <div class="kpi-grid" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
-          <div class="kpi-card"><div><div class="kpi-label">Total Impacted</div><div class="kpi-value" id="im-total">&#8211;</div></div><div class="kpi-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div></div>
-          <div class="kpi-card"><div><div class="kpi-label">Direct</div><div class="kpi-value" id="im-direct">&#8211;</div></div><div class="kpi-icon navy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div></div>
-          <div class="kpi-card"><div><div class="kpi-label">Indirect</div><div class="kpi-value" id="im-indirect">&#8211;</div></div><div class="kpi-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg></div></div>
-          <div class="kpi-card"><div><div class="kpi-label">Jobs Created</div><div class="kpi-value" id="im-jobs">&#8211;</div></div><div class="kpi-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div></div>
-          <div class="kpi-card"><div><div class="kpi-label">Avg Women %</div><div class="kpi-value" id="im-women">&#8211;</div></div><div class="kpi-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div></div>
-          <div class="kpi-card"><div><div class="kpi-label">Avg Youth %</div><div class="kpi-value" id="im-youth">&#8211;</div></div><div class="kpi-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div></div>
-        </div>
-        <div class="grid-2 section-gap">
-          <div class="card">
-            <div class="card-title">People Reached</div>
-            <div class="card-sub">Direct vs Indirect beneficiaries</div>
-            <div class="chart-wrap"><canvas id="ch-reach"></canvas></div>
-          </div>
-          <div class="card">
-            <div class="card-title">Jobs Created by Cluster</div>
-            <div class="card-sub">Employment outcomes across delivery clusters</div>
-            <div class="chart-wrap"><canvas id="ch-jobs"></canvas></div>
-          </div>
-        </div>
-        <div class="card section-gap">
-          <div class="card-title">Gender &amp; Youth Inclusion</div>
-          <div class="card-sub">Average share of beneficiaries</div>
-          <div class="demo-grid">
-            <div class="donut-wrap">
-              <div class="chart-wrap short"><canvas id="ch-women"></canvas></div>
-              <div class="donut-center"><div class="donut-center-val" id="im-women-pct">&#8211;</div><div class="donut-center-lbl">Women</div></div>
-              <p style="text-align:center;font-size:13px;font-weight:600;margin-top:8px">Women beneficiaries</p>
-            </div>
-            <div class="donut-wrap">
-              <div class="chart-wrap short"><canvas id="ch-youth"></canvas></div>
-              <div class="donut-center"><div class="donut-center-val" id="im-youth-pct">&#8211;</div><div class="donut-center-lbl">Youth</div></div>
-              <p style="text-align:center;font-size:13px;font-weight:600;margin-top:8px">Youth beneficiaries</p>
-            </div>
-          </div>
-        </div>
-        <div class="card section-gap">
-          <div class="card-title">Top 5 Impact Projects</div>
-          <div class="card-sub">Largest reach across the State</div>
-          <div class="impact-list" id="im-top-list"></div>
+        <div class="grid-2">
+          <div class="card"><h3>Beneficiaries by LGA</h3><div class="chart-wrap tall"><canvas id="ch-lga"></canvas></div></div>
+          <div class="card"><h3>Women vs Youth Inclusion (by Cluster)</h3><div class="chart-wrap tall"><canvas id="ch-demo"></canvas></div></div>
         </div>
       </section>
 
       <!-- SDG -->
       <section class="page" id="page-sdg">
-        <div class="page-header">
-          <h2>SDG Alignment</h2>
-          <p>Portfolio contribution to the UN 2030 Agenda</p>
+        <div class="card"><h3>17 Sustainable Development Goals — Coverage</h3>
+          <div class="sdg-grid" id="sdg-grid"></div>
         </div>
-        <div class="card section-gap">
-          <div class="card-title">17 Goals &#183; Budget Contribution</div>
-          <div class="sdg-cards" id="sdg-tiles"></div>
-        </div>
-        <div class="card section-gap">
-          <div class="card-title">Clusters &#215; SDGs</div>
-          <div class="card-sub">Budget split by cluster, stacked by SDG</div>
-          <div class="chart-wrap tall"><canvas id="ch-sdg-stack"></canvas></div>
-        </div>
-        <div class="card section-gap">
-          <div class="card-title">Multi-SDG Contribution Profile</div>
-          <div class="card-sub">Relative budget and impact intensity across all 17 SDGs</div>
+        <div class="card"><h3>SDG Contribution Profile</h3>
           <div class="chart-wrap tall"><canvas id="ch-radar"></canvas></div>
         </div>
       </section>
 
       <!-- FINANCIAL -->
       <section class="page" id="page-financial">
-        <div class="page-header">
-          <h2>Financial Performance</h2>
-          <p>Budget execution, utilisation, and value for money</p>
+        <div class="grid-2">
+          <div class="card"><h3>Budget vs Spend (by Cluster)</h3><div class="chart-wrap tall"><canvas id="ch-bvs"></canvas></div></div>
+          <div class="card"><h3>Utilisation by Year</h3><div class="chart-wrap tall"><canvas id="ch-year"></canvas></div></div>
         </div>
-        <div class="kpi-grid section-gap">
-          <div class="kpi-card"><div><div class="kpi-label">Total Budget</div><div class="kpi-value" id="fin-budget">&#8211;</div></div><div class="kpi-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div></div>
-          <div class="kpi-card"><div><div class="kpi-label">Total Spend</div><div class="kpi-value" id="fin-spend">&#8211;</div></div><div class="kpi-icon navy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div></div>
-          <div class="kpi-card"><div><div class="kpi-label">Unspent</div><div class="kpi-value" id="fin-unspent">&#8211;</div><div class="kpi-sub" id="fin-remaining"></div></div><div class="kpi-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div></div>
-          <div class="kpi-card"><div><div class="kpi-label">Utilisation</div><div class="kpi-value" id="fin-util">&#8211;</div></div><div class="kpi-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/></svg></div></div>
-        </div>
-        <div class="card section-gap">
-          <div class="card-title">Budget vs Spend by Cluster</div>
-          <div class="card-sub">Execution rate against planned allocation (line = utilisation %)</div>
-          <div class="chart-wrap tall"><canvas id="ch-bvs"></canvas></div>
-        </div>
-        <div class="grid-2 section-gap">
-          <div class="card">
-            <div class="card-title">Utilisation Trend (Year on Year)</div>
-            <div class="card-sub">Spend execution across fiscal years</div>
-            <div class="chart-wrap"><canvas id="ch-year"></canvas></div>
-          </div>
-          <div class="card">
-            <div class="card-title">Value for Money</div>
-            <div class="card-sub">People impacted vs spend (&#8358;M) &#8212; bubble size = jobs</div>
-            <div class="chart-wrap"><canvas id="ch-vfm"></canvas></div>
-          </div>
-        </div>
-        <div class="insight-card section-gap">
-          <h3>Headline Insight</h3>
-          <p id="fin-insight">&#8211;</p>
-        </div>
+        <div class="card"><h3>Value for Money — Impact per ₦ Million</h3><div class="chart-wrap tall"><canvas id="ch-vfm"></canvas></div></div>
       </section>
-
     </main>
-    <footer class="footer">&#169; 2025&#8211;2026 Abia State Government &middot; Built for transparent, impact-led governance.</footer>
+
+    <footer class="footer">© 2025–2026 Abia State Government · Built for transparent, impact-led governance.</footer>
   </div>
 </div>
 
+<!-- Project modal -->
 <div class="modal-backdrop" id="modal-bd" hidden>
-  <div class="modal" role="dialog" aria-modal="true">
-    <button class="modal-close" id="modal-close" aria-label="Close">&#10005;</button>
+  <div class="modal">
+    <button class="modal-close" id="modal-close">✕</button>
     <div id="modal-body"></div>
   </div>
 </div>
